@@ -9,7 +9,7 @@ import io.reactivex.rxjava3.annotations.NonNull;
 class Word_Entity
 {
     @PrimaryKey
-    @NonNull
+    @androidx.annotation.NonNull
     @ColumnInfo(name = "word")
     private final String word;
 
