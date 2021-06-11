@@ -20,6 +20,11 @@ public abstract class wordRoomDatabase extends RoomDatabase
     static final ExecutorService databaseWriteExec
             = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
+    /*
+    *Singleton Class...
+    *creates only one room database for the entire app in the application context.
+    */
+
     static wordRoomDatabase getDatabaseInstance(final Context context)
     {
         if(INSTANCE == null)
