@@ -14,6 +14,9 @@ public interface Dao_word_entity
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertIntoDB(Word_Entity Word);
 
+    @Query("DELETE FROM WORDS_Table")
+    void deleteAll();
+
     @Query("SELECT * FROM WORDS_Table ORDER BY word ASC")
     LiveData<List<Word_Entity>> getAlphabetizedWords();
 }
