@@ -23,7 +23,7 @@ public class WordRepository
         return allWordsLiveData;
     }//Wrapper class over allWordsLiveData
 
-    void insertWord(String word)
+    void insertWord(Word_Entity word)
     {
         wordRoomDatabase.databaseWriteExec.execute(() -> wordDao.insertIntoDB(word));//Inserts data into DB in a background thread separately from UI thread
     }//Wrapper class over insertIntoDB method
