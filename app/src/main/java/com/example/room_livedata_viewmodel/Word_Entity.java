@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 
-@androidx.room.Entity(tableName = "WORDS Table")
+@androidx.room.Entity(tableName = "WORDS_Table")
 class Word_Entity
 {
     @PrimaryKey
