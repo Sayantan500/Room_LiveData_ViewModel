@@ -2,9 +2,13 @@ package com.example.room_livedata_viewmodel;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,7 +39,28 @@ public abstract class wordRoomDatabase extends RoomDatabase
                     INSTANCE = Room.databaseBuilder(
                             context.getApplicationContext(),
                             wordRoomDatabase.class,
-                            "word_database").build();
+                            "word_database")
+                            .addCallback(new RoomDatabase.Callback()
+                            {
+                                /**
+                                 * Called when the database is created for the first time. This is called after all the
+                                 * tables are created.
+                                 *
+                                 * @param db The database.
+                                 */
+                                @Override
+                                public void onCreate(@NonNull @NotNull SupportSQLiteDatabase db) {
+                                    super.onCreate(db);
+                                    databaseWriteExec.execute(() -> {
+                                        Dao_word_entity daoWordEntity = INSTANCE.wordDao();
+                                        daoWordEntity.deleteAll();
+
+                                        daoWordEntity.insertIntoDB(new Word_Entity("HELLO"));
+                                        daoWordEntity.insertIntoDB(new Word_Entity("WORLD"));
+                                    });
+                                }
+                            })
+                            .build();
             }
         }
         return INSTANCE;
