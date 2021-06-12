@@ -40,6 +40,7 @@ public abstract class wordRoomDatabase extends RoomDatabase
                             context.getApplicationContext(),
                             wordRoomDatabase.class,
                             "word_database")
+                            .fallbackToDestructiveMigration()
                             .addCallback(new RoomDatabase.Callback()
                             {
                                 /**
