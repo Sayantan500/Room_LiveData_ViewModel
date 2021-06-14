@@ -2,6 +2,7 @@ package com.example.room_livedata_viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -13,6 +14,9 @@ public interface Dao_word_entity
 {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertIntoDB(Word_Entity Word);
+
+    @Delete
+    void deleteFromDB(Word_Entity wordEntity);
 
     @Query("DELETE FROM WORDS_Table")
     void deleteAll();

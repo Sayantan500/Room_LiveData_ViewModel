@@ -27,4 +27,11 @@ public class WordRepository
     {
         wordRoomDatabase.databaseWriteExec.execute(() -> wordDao.insertIntoDB(word));//Inserts data into DB in a background thread separately from UI thread
     }//Wrapper class over insertIntoDB method
+
+    public void delete(Word_Entity delWordEntity)
+    {
+        wordRoomDatabase.databaseWriteExec.execute(() -> {
+            wordDao.deleteFromDB(delWordEntity); //deletes specific data from database in background thread
+        });
+    }
 }

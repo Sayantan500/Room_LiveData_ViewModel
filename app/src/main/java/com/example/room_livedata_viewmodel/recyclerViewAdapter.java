@@ -49,6 +49,11 @@ public class recyclerViewAdapter extends ListAdapter<Word_Entity , recyclerViewA
         holder.textView.setText(newWordEntity.getWord());
     }
 
+    Word_Entity getWordEntity(int position)
+    {
+        return getItem(position);
+    }
+
     protected static class wordViewHolder extends RecyclerView.ViewHolder
     {
         final TextView textView;
