@@ -12,26 +12,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public class recyclerViewAdapter extends ListAdapter<Word_Entity , recyclerViewAdapter.wordViewHolder>
 {
-    recyclerViewAdapter(@NonNull DiffUtil.ItemCallback<Word_Entity> callback)
+    private static EditTextCallback listener;
+    recyclerViewAdapter()
     {
-        super(callback);
+        super(WordDiffCallback);
     }
 
-    static class WordDiff extends DiffUtil.ItemCallback<Word_Entity>
-    {
-
+    private static final DiffUtil.ItemCallback<Word_Entity>
+            WordDiffCallback = new DiffUtil.ItemCallback<Word_Entity>() {
         @Override
         public boolean areItemsTheSame(@NonNull Word_Entity oldItem, @NonNull Word_Entity newItem) {
-            return oldItem == newItem;
+            return oldItem.getWord() == newItem.getWord();
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull Word_Entity oldItem, @NonNull Word_Entity newItem) {
             return oldItem.getWord().equals(newItem.getWord());
         }
-    }
+    };
 
     @NonNull
     @Override
@@ -47,6 +49,8 @@ public class recyclerViewAdapter extends ListAdapter<Word_Entity , recyclerViewA
     {
         Word_Entity newWordEntity = getItem(position);
         holder.textView.setText(newWordEntity.getWord());
+        holder.textView_pk. setText(String.valueOf(newWordEntity.getWordNo()));
+        holder.textView.setOnClickListener(v -> listener.onClick(newWordEntity));
     }
 
     Word_Entity getWordEntity(int position)
@@ -54,12 +58,23 @@ public class recyclerViewAdapter extends ListAdapter<Word_Entity , recyclerViewA
         return getItem(position);
     }
 
+    public interface EditTextCallback
+    {
+        void onClick(Word_Entity word);
+    }
+
+    void setOnClickListener(EditTextCallback listener)
+    {
+        recyclerViewAdapter.listener = listener;
+    }
+
     protected static class wordViewHolder extends RecyclerView.ViewHolder
     {
-        final TextView textView;
+        final TextView textView,textView_pk;
         public wordViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.recyclerTextView);
+            textView_pk = itemView.findViewById(R.id.textView_pk);
         }
     }
 }

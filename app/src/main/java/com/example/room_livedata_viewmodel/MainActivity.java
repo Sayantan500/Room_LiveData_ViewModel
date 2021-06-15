@@ -19,7 +19,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE = 1;
+    private static final int REQUEST_CODE_NEW = 1;
+    private static final int REQUEST_CODE_EDIT = 2;
+
+    private Word_Entity oldWord;
 
     RecyclerView recyclerView;
     FloatingActionButton floatingActionButton;
@@ -34,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         floatingActionButton = findViewById(R.id.floatingActionButton);
 
-        recyclerViewAdapter = new recyclerViewAdapter(new recyclerViewAdapter.WordDiff());
+        recyclerViewAdapter = new recyclerViewAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -48,11 +51,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume()
     {
         super.onResume();
+
+        //Floating Action Button for adding new words
         floatingActionButton.setOnClickListener((View v) -> {
             Intent newWordActivity = new Intent(MainActivity.this,NewWordActivity.class);
-            startActivityForResult(newWordActivity , REQUEST_CODE);
+            startActivityForResult(newWordActivity , REQUEST_CODE_NEW);
         });
 
+        //callback to handle swipe action on list item -> left swipe to delete...
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT) {
             @Override
@@ -73,21 +79,54 @@ public class MainActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             }
         }).attachToRecyclerView(recyclerView);
+
+
+        recyclerViewAdapter.setOnClickListener(word -> {
+            Intent editWordActivity = new Intent(MainActivity.this , EditWordActivity.class);
+            editWordActivity.putExtra("old_word_to_edit" , word.getWord());
+            editWordActivity.putExtra("old_word_pk" , word.getWordNo());
+            startActivityForResult(editWordActivity,REQUEST_CODE_EDIT);
+        });
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CODE)
+
+        switch(requestCode)
         {
-            if(resultCode == RESULT_OK)
-            {
-                Word_Entity word_entity = new Word_Entity(data.getStringExtra("new_word"));
-                wordViewModel.insert(word_entity);
-                Toast.makeText(MainActivity.this , "Word Added Successfully" , Toast.LENGTH_LONG).show();
-            }
-            else if(resultCode == RESULT_CANCELED)
-                Toast.makeText(MainActivity.this , "Word Already Present" , Toast.LENGTH_SHORT).show();
-        }
-    }
+            case REQUEST_CODE_NEW :
+                if(resultCode == RESULT_OK)
+                {
+                    Word_Entity word_entity = new Word_Entity(data.getStringExtra("new_word"));
+                    wordViewModel.insert(word_entity);
+                    Toast.makeText(MainActivity.this ,
+                            "Word Added Successfully" ,
+                            Toast.LENGTH_LONG).show();
+                }
+                else if(resultCode == RESULT_CANCELED)
+                    Toast.makeText(MainActivity.this ,
+                            "Word Already Present" ,
+                            Toast.LENGTH_SHORT).show();
+
+                break;
+
+            case REQUEST_CODE_EDIT :
+                if(resultCode == RESULT_OK)
+                {
+                    Toast.makeText(MainActivity.this ,
+                            data.getStringExtra("New_word_edited") + "" + data.getIntExtra("key",0) ,
+                            Toast.LENGTH_SHORT).show();
+
+                    Word_Entity editedWord = new Word_Entity(data.getStringExtra("New_word_edited"));
+                    editedWord.setWordNo(data.getIntExtra("key",0));
+
+                    wordViewModel.update(editedWord);
+
+                }
+
+                break;
+        }//end switch-case
+    }//end onActivityResult
 }
