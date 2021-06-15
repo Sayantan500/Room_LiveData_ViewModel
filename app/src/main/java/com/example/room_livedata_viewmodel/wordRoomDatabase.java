@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Word_Entity.class} , version = 1 , exportSchema = false)
+@Database(entities = {Word_Entity.class} , version = 2 , exportSchema = false)
 public abstract class wordRoomDatabase extends RoomDatabase
 {
     public abstract Dao_word_entity wordDao();

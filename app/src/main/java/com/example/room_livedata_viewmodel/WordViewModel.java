@@ -33,6 +33,11 @@ public class WordViewModel extends AndroidViewModel
         wordRepository.insertWord(word);
     }
 
+    void update(Word_Entity editedWord)
+    {
+        wordRepository.update(editedWord);
+    }
+
     void delete(Word_Entity delWordEntity)
     {
         wordRepository.delete(delWordEntity);

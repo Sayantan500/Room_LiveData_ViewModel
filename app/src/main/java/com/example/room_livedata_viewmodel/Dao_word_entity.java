@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -14,6 +15,9 @@ public interface Dao_word_entity
 {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertIntoDB(Word_Entity Word);
+
+    @Update
+    void updateOldEntity(Word_Entity edited_Word);
 
     @Delete
     void deleteFromDB(Word_Entity wordEntity);
